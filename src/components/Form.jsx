@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogBody, DialogFooter, DialogHeader, Input } from "@material-tailwind/react";
+import { Button, checkbox, Dialog, DialogBody, DialogFooter, DialogHeader, Input } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { Status } from "../constants";
 import { useTasks } from "../context/TaskContext";
@@ -8,15 +8,24 @@ export const Form = () => {
     const { selectedTask, isOpen, setIsOpen, setTasks } = useTasks()
 
     const [title, setTitle] = useState("")
+    const [description, setDescription] = useState("")
 
     useEffect(() => {
-        if (selectedTask) setTitle(selectedTask.name)
+        if (selectedTask) {
+            setTitle(selectedTask.name)
+            setDescription(selectedTask.description)
+        }
     }, [selectedTask])
 
 
 
-    const handleOnchange = ({ target: { value } }) => {
+    const handleOnchangeTitle = ({ target: { value } }) => {
         setTitle(value)
+
+    }
+
+    const handleOnchangeDescription = ({ target: { value } }) => {
+        setDescription(value)
 
     }
 
@@ -27,7 +36,7 @@ export const Form = () => {
         if (selectedTask) {
             setTasks((prevTask) => {
                 return prevTask.map((t) =>
-                    t.id === selectedTask.id ? { ...t, name: title } : t
+                    t.id === selectedTask.id ? { ...t, name: title, description } : t
                 );
             });
         }
@@ -39,8 +48,9 @@ export const Form = () => {
                 {
                     id: Math.random().toString(),
                     name: title,
-                    description: "Esto es una breve descripcion para tarea 1",
+                    description,
                     status: Status.pending,
+                    checked: false
                 },
             ]);
         }
@@ -48,6 +58,7 @@ export const Form = () => {
 
 
         setTitle("")
+        setDescription("")
         setIsOpen(!isOpen)
 
     }
@@ -59,8 +70,9 @@ export const Form = () => {
         <Dialog open={isOpen} handler={_handleOpen} >
             <DialogHeader> My Title</DialogHeader>
             <form onSubmit={handleSubmit}>
-                <DialogBody>
-                    <Input label="Nombre" value={title} onChange={handleOnchange} />
+                <DialogBody className="flex flex-col gap-5">
+                    <Input label="Nombre" value={title} onChange={handleOnchangeTitle} />
+                    <Input label="Descripcion" value={description} onChange={handleOnchangeDescription} />
                 </DialogBody>
                 <DialogFooter>
                     <div>

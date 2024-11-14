@@ -35,6 +35,7 @@ export const defaultTasks = [
     name: "TAREA 1",
     description: "Esto es una breve descripcion para tarea 1",
     status: Status.pending,
+    checked: false,
   },
   {
     id: 2,
@@ -47,5 +48,6 @@ export const defaultTasks = [
     name: "TAREA 3",
     description: "Esto es una breve descripcion para tarea 3",
     status: Status.Done,
+    checked: true,
   },
 ];

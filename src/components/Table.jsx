@@ -1,10 +1,10 @@
-import { Button, Card, Typography } from "@material-tailwind/react";
+import { Button, Card, Checkbox, Typography } from "@material-tailwind/react";
 import { Edit, Trash } from "lucide-react";
 import { statusConfigByStatus, statusConfigs } from "../constants";
 import { cn } from "../lib/util";
 import { useTasks } from "../context/TaskContext";
 
-const TABLE_HEAD = ["Nombre", "Descripcion", "Estado", "Acciones"];
+const TABLE_HEAD = ["", "Nombre", "Descripcion", "Estado", "Acciones"];
 
 export function Table() {
 
@@ -45,7 +45,13 @@ export function Table() {
         setTasks((prevTask) => prevTask.filter((task) => task.id !== id))
     }
 
-
+    const handleToggleChecked = (id) => {
+        setTasks((prevTasks) =>
+            prevTasks.map((task) =>
+                task.id === id ? { ...task, checked: !task.checked } : task
+            )
+        );
+    };
     return (
         <Card className="h-full w-full ">
             <table className="w-full min-w-max table-auto text-left">
@@ -69,10 +75,14 @@ export function Table() {
                 </thead>
                 <tbody>
                     {tasks?.map((task) => {
-                        const { id, name, description, status } = task
+                        const { id, name, description, status, checked } = task
                         const statusConfig = statusConfigByStatus[status]
+                        console.log(checked)
                         return (
                             <tr key={id}>
+                                <td className={"p-4"}>
+                                    <Checkbox defaultChecked={checked} onChange={() => handleToggleChecked(id)} ripple={true} />
+                                </td>
                                 <td className={"p-4"}>
                                     <Typography
                                         variant="small"
